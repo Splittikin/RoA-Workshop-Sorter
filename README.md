@@ -12,4 +12,4 @@ I could just sort them manually, but not only would that take an unreasonable am
 <br>
 
 <p>This is my first real utility program that I'm distributing around to others to freely use, so please give feedback! Let me know if you encounter any issues, have suggestions, or know of a way of improving it!</p>
-<p>My Discord username is Splittikin#1054. I have my DMs off, but feel free to ping me anywhere. You can find me in the Rivals Official Discord server or the Rivals Extended Workshop server!</p>
+<p>My Discord username is Splittikin#1054. I have my DMs off, but feel free to ping me anywhere. You can find me in the Rivals Official Discord server, the Rivals Extended Workshop server, or in many, many of the modded fighter Discords!</p>

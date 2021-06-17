@@ -5,13 +5,17 @@ import shutil
 import time
 
 # initialize some vars
+major_version = 0
+minor_version = 1
+updater_version = 1
+
 order_file_input = ""
 categories_file_input = ""
 
 # greeting window
 window_greeting = tk.Tk()
 greeting_title = tk.Label(
-    text="Rivals of Aether Character Sorter\nBy Splittikin",
+    text=f"Rivals of Aether Character Sorter \nv{major_version}.{minor_version} By Splittikin",
     foreground="purple"
 ).pack()
 greeting_inst_title = tk.Label(
@@ -23,7 +27,7 @@ greeting_instructions = tk.Label(
 2. Enter the Steam Workshop menu.
    (Main Menu > Extras > Steam Workshop)
 3. Go to the 'Characters' tab.
-4. Press the button to move a character, then press it again.
+4. Press the button to move a fighter, then press it again.
    (C on keyboard, Y on xbox controller.)
 5. Exit the menu & close the game.""",
     foreground="black",
@@ -52,16 +56,41 @@ def order_and_categories_picker(order_failed = False, categories_failed = False)
     # but i dont need to run files_continue() before order_and_categories_picker() so its ok
     def files_continue():
         window_filepicker.destroy()
+        order_notexist = False
+        categories_notexist = False
+
         order_file_input = order_file_path.get()
         categories_file_input = categories_file_path.get()
-    print(categories_failed)
+            
+        try:
+            with open(order_file_input, "rb") as order_file:
+                order_roa = order_file.read()
+                global order_roa_split
+                order_roa_split = order_roa.split(b'\x00')
+        except FileNotFoundError:
+            order_notexist = True
+
+        try:
+            with open(categories_file_input, "rb") as categories_file:
+                categories_file.read()
+        except FileNotFoundError:
+            categories_notexist = True
+            
+        if order_notexist or categories_notexist:
+            order_and_categories_picker(order_notexist, categories_notexist)
+            
+                
     # order.roa bits
     window_filepicker = tk.Tk()
     order_filepick_frame = tk.Frame(window_filepicker, bg="#e3e3e3")
+    order_title = tk.Label(
+        text=f"Rivals of Aether Character Sorter\nv{major_version}.{minor_version} By Splittikin",
+        foreground="purple"
+    ).pack()
     order_filepick_text = tk.Label(
         order_filepick_frame,
         text="""Order.roa File
-    This contains the order that your characters should be displayed in.""",
+    This contains the order that your workshop items should be displayed in.""",
         justify='left',
     ).pack(fill='both', expand=True)
 
@@ -84,12 +113,14 @@ def order_and_categories_picker(order_failed = False, categories_failed = False)
         text="Browse",
         command=order_file_picked
     ).pack(side='right')
+    if order_failed:
+        order_failed_label = tk.Label(order_filepick_frame, text = "Could not find that file!", foreground = 'red').pack()
 
     categories_filepick_frame = tk.Frame(window_filepicker, bg="#e3e3e3")
     categories_filepick_text = tk.Label(
         categories_filepick_frame,
         text="""\nCategories.roa File
-    This contains the categories for all of your characters to go in.""",
+    This contains the categories for all of your fighters to go in.""",
         justify='left',
     ).pack(fill='both', expand=True)
 
@@ -114,13 +145,16 @@ def order_and_categories_picker(order_failed = False, categories_failed = False)
         text="Browse",
         command=categories_file_picked
     ).pack(side='right')
+    
+    if categories_failed:
+        categories_failed_label = tk.Label(categories_filepick_frame, text = "Could not find that file!", foreground = 'red').pack()
 
     order_filepick_frame.pack(fill='both', expand=True)
     categories_filepick_frame.pack(fill='both', expand=True)
 
     # backups of the two files will be made in the same folder that way
     #  the user can go back to theirold sorting if they change their mind
-    filepick_willbackup = tk.Label(text="\nYour characters will be sorted by name alphapetically.\nAny categories you currently have will be destroyed.\n\nA backup copy of the orignal files will be made in the same directory before any of this happens.").pack()
+    filepick_willbackup = tk.Label(text="\nYour fighters, buddies, & skins will be sorted by name alphapetically.\nAny categories you currently have will be destroyed.\n\nA backup copy of the orignal files will be made in the same directory before any of this happens.").pack()
 
     filepick_continue_button = tk.Button(
         text="Sort my characters!",
@@ -130,13 +164,6 @@ def order_and_categories_picker(order_failed = False, categories_failed = False)
     window_filepicker.protocol("WM_DELETE_WINDOW", quit)
     window_filepicker.mainloop()
 order_and_categories_picker()
-
-#TODO: Make the greeting & file picker use the same window instead of destroying the greeting window & making a new one
-
-with open(order_file_input, "rb") as in_file:
-    order_roa = in_file.read()
-    order_roa_split = order_roa.split(b'\x00')
-    print(order_roa_split)
 
 # create a copy of the order.roa file
 #  with the current timestamp in the name (so that backups never get overwritten)

@@ -1,3 +1,6 @@
+<h1>This script is now OBSOLETE! Character sorting has been implemented in the Rivals of Aether game itself!</h1>
+<p>You can now sort characters in RoA within the game itself, by going to the Extras menu, into Steam Workshop, onto the characters tab. Select a character like you're about to move it, and press SELECT. Thus, there's no need to use an external python script to do this anymore. As such, this repository is now archived. Feel free to look through it if you want to, though.</p>
+
 <h1>Rivals of Aether Workshop Sorter</h1>
 <p>Here is a Python script that will search all of your Rivals of Aether workhop items, & sort them out alphabetically. Ideal for those who have an extremely large amount of Workshop items installed & are having trouble quickly finding specific items.</p>
 
